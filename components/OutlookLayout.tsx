@@ -10,9 +10,6 @@ import {
   Menu,
   ChevronDown,
   Star,
-  Archive,
-  Trash2,
-  Send,
   FileText,
   Plus,
   MoreHorizontal,
@@ -34,12 +31,6 @@ interface Email {
   isImportant: boolean;
 }
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  time: string;
-  date: string;
-}
 
 const mockEmails: Email[] = [
   {
@@ -64,20 +55,6 @@ const mockEmails: Email[] = [
   }
 ];
 
-const mockCalendarEvents: CalendarEvent[] = [
-  {
-    id: '1',
-    title: 'Team Meeting',
-    time: '2:00 PM',
-    date: '16'
-  },
-  {
-    id: '2',
-    title: 'Project Review',
-    time: '4:30 PM',
-    date: '18'
-  }
-];
 
 export default function OutlookLayout() {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(mockEmails[0]);
