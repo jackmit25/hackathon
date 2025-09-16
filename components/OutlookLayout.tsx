@@ -34,9 +34,9 @@ interface Email {
 const mockEmails: Email[] = [
   {
     id: '1',
-    from: 'Jack Mitchell',
-    subject: 'Tester',
-    preview: 'Tester, tester',
+    from: 'Genie',
+    subject: 'ACME SaaS contract auto-renews soon — send notice or renegotiate',
+    preview: 'Hey Jack, ACME SaaS Order Form will auto-renew on 01 Oct 2025 unless notice is sent by 21 Sep. This is worth about £180k to you. I recommend you send renewal-intent email (with pricing + terms update) or send non-renewal notice. Let me know if you need any help with anything, Genie',
     time: '13:14',
     isRead: false,
     isSelected: true,
@@ -249,7 +249,7 @@ export default function OutlookLayout() {
               {/* Email Header */}
               <div className="outlook-email-view-header">
                 <div className="outlook-email-view-title">
-                  Acme SaaS contract auto-renews soon — send notice or renegotiate
+                  ACME SaaS contract auto-renews soon — send notice or renegotiate
                 </div>
                 <div className="outlook-email-view-meta">
                   <div className="outlook-email-view-avatar">G</div>
@@ -274,11 +274,15 @@ export default function OutlookLayout() {
 
               {/* Email Body */}
               <div className="outlook-email-view-body">
-                <div className="outlook-email-view-content">
-                  <p>Acme SaaS Order Form will auto-renew on 01 Oct 2025 unless notice is sent by 21 Sep.</p>
-                  <p>Value at stake: £180k ARR</p>
-                  <p>Send renewal-intent email (with pricing + terms update) or send non-renewal notice.</p>
-                  <p>[Open in Genie] Review Clause 11.2, see draft text, and ask Genie for fallback options.</p>
+                <div className="outlook-email-view-content" style={{maxWidth: '80%'}}>
+                  <p>Hey Jack,</p>
+                  <br />
+                  <p>ACME SaaS Order Form will auto-renew on 01 Oct 2025 unless notice is sent by 21 Sep. This is worth about £180k to you.</p>
+                  <br />
+                  <p>I recommend you <a href="#" style={{color: '#0078d4', textDecoration: 'underline'}}>send renewal-intent email</a> (with pricing + terms update) or <a href="#" style={{color: '#0078d4', textDecoration: 'underline'}}>send non-renewal notice</a>.</p>
+                  <br />
+                  <p>Let me know if you need any help with anything,</p>
+                  <p>Genie</p>
                 </div>
                 
                 <div className="outlook-email-view-buttons">
