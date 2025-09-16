@@ -17,7 +17,10 @@ import {
   Filter,
   SortAsc,
   Grid3X3,
+  Plus
 } from 'lucide-react';
+import ComposeEmail from './ComposeEmail';
+import CalendarSidebar from './CalendarSidebar';
 
 interface Email {
   id: string;
@@ -54,10 +57,26 @@ const mockEmails: Email[] = [
   }
 ];
 
+const mockDrafts: Email[] = [
+  {
+    id: 'draft-1',
+    from: 'You',
+    subject: 'ACME SaaS Renewal Intent - Pricing & Terms Update',
+    preview: 'Dear Anne Smith, Thank you for your continued partnership with ACME. I am writing to discuss the upcoming renewal of our SaaS agreement and would like to propose some updates to our current terms...',
+    time: 'Now',
+    isRead: false,
+    isSelected: false,
+    isImportant: false
+  }
+];
+
 
 export default function OutlookLayout() {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(mockEmails[0]);
   const [activeTab, setActiveTab] = useState<'focused' | 'other'>('focused');
+  const [isComposing, setIsComposing] = useState(false);
+  const [currentFolder, setCurrentFolder] = useState<'inbox' | 'drafts'>('inbox');
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<number | null>(null);
 
   return (
     <div className="outlook-container">
@@ -171,9 +190,19 @@ export default function OutlookLayout() {
               <ChevronDown size={16} />
             </div>
             <div className="outlook-folder-list">
-              <button className="outlook-folder-button active">Inbox</button>
+              <button 
+                className={`outlook-folder-button ${currentFolder === 'inbox' ? 'active' : ''}`}
+                onClick={() => setCurrentFolder('inbox')}
+              >
+                Inbox
+              </button>
               <button className="outlook-folder-button">Junk Email</button>
-              <button className="outlook-folder-button">Drafts</button>
+              <button 
+                className={`outlook-folder-button ${currentFolder === 'drafts' ? 'active' : ''}`}
+                onClick={() => setCurrentFolder('drafts')}
+              >
+                Drafts
+              </button>
               <button className="outlook-folder-button">Sent Items</button>
               <button className="outlook-folder-button">Deleted Items</button>
               <button className="outlook-folder-button">Archive</button>
@@ -219,13 +248,13 @@ export default function OutlookLayout() {
 
           {/* Email List */}
           <div className="outlook-email-list">
-            {mockEmails.map((email) => (
+            {(isComposing ? mockDrafts : (currentFolder === 'inbox' ? mockEmails : mockDrafts)).map((email) => (
               <div
                 key={email.id}
                 className={`outlook-email-item ${email.isSelected ? 'selected' : ''}`}
                 onClick={() => setSelectedEmail(email)}
               >
-                <div className={`outlook-email-avatar ${email.from === 'Genie' ? 'purple' : 'blue'}`}>
+                <div className={`outlook-email-avatar ${email.from === 'Genie' ? 'purple' : email.from === 'You' ? 'green' : 'blue'}`}>
                   {email.from.charAt(0)}
                 </div>
                 <div className="outlook-email-content">
@@ -242,9 +271,11 @@ export default function OutlookLayout() {
           </div>
         </div>
 
-        {/* Right Panel - Email Content */}
+        {/* Right Panel - Email Content or Compose */}
         <div className="outlook-right-panel">
-          {selectedEmail && (
+          {isComposing ? (
+            <ComposeEmail onClose={() => setIsComposing(false)} selectedDate={selectedCalendarDate || undefined} />
+          ) : selectedEmail && (
             <>
               {/* Email Header */}
               <div className="outlook-email-view-header">
@@ -279,7 +310,7 @@ export default function OutlookLayout() {
                   <br />
                   <p>ACME SaaS Order Form will auto-renew on 01 Oct 2025 unless notice is sent by 21 Sep. This is worth about £180k to you.</p>
                   <br />
-                  <p>I recommend you <a href="#" style={{color: '#0078d4', textDecoration: 'underline'}}>send renewal-intent email</a> (with pricing + terms update) or <a href="#" style={{color: '#0078d4', textDecoration: 'underline'}}>send non-renewal notice</a>.</p>
+                  <p>I recommend you <a href="#" onClick={(e) => { e.preventDefault(); setIsComposing(true); setCurrentFolder('drafts'); }} style={{color: '#0078d4', textDecoration: 'underline', cursor: 'pointer'}}>send renewal-intent email</a> (with pricing + terms update) or <a href="#" style={{color: '#0078d4', textDecoration: 'underline'}}>send non-renewal notice</a>.</p>
                   <br />
                   <p>Let me know if you need any help with anything,</p>
                   <p>Genie</p>
@@ -293,6 +324,9 @@ export default function OutlookLayout() {
             </>
           )}
         </div>
+
+        {/* Calendar Panel - Show when composing */}
+        {isComposing && <CalendarSidebar onDateSelect={setSelectedCalendarDate} />}
 
       </div>
     </div>

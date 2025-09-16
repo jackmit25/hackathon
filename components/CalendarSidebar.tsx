@@ -4,7 +4,11 @@ import {
 } from 'lucide-react';
 
 
-export default function CalendarSidebar() {
+interface CalendarSidebarProps {
+  onDateSelect?: (date: number) => void;
+}
+
+export default function CalendarSidebar({ onDateSelect }: CalendarSidebarProps) {
   const [activeView, setActiveView] = useState<'calendar' | 'todo'>('calendar');
 
   return (
@@ -44,6 +48,8 @@ export default function CalendarSidebar() {
               <div
                 key={day}
                 className={`outlook-calendar-day ${day === 16 ? 'today' : ''}`}
+                onClick={() => onDateSelect?.(day)}
+                style={{ cursor: 'pointer' }}
               >
                 {day}
               </div>
